@@ -99,13 +99,6 @@ function calcSalesData(period, data) {
 
 //Authorize and get reports in JSON
 const init = function() {
-    //if .env not exists -> check URL 'hash' property
-    //if no such property -> access denied
-    //else check hash value
-    //if it is matched with environment variable -> go on
-    //if no -> access denied
-
-    console.log(`Before: ${authData.login}`);
 
     if (authData.password === undefined) {
         const queryString = window.location.search;
@@ -117,11 +110,7 @@ const init = function() {
         }
     }
 
-    console.log(`After: ${authData.login}`);
-
     if (authData.password != undefined) {
-        console.log("success");
-
         sendRequest('POST', requestURL + authURL, authData)
             .then(dataAuth => {
                 authToken = getAuthToken(dataAuth);
@@ -160,6 +149,8 @@ const init = function() {
             .catch(err => {
                 console.log(err);
             });
+    } else {
+        console.log('Authorization failed!');
     }
 }
 
