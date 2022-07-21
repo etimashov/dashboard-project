@@ -99,44 +99,63 @@ function calcSalesData(period, data) {
 
 //Authorize and get reports in JSON
 const init = function() {
-    sendRequest('POST', requestURL + authURL, authData)
-        .then(dataAuth => {
-            authToken = getAuthToken(dataAuth);
-        })
-        .then( () => sendRequest('GET', requestURL + dashboardURL, null, authToken))
-        .then(reports => {
-            reportsData = reports;
-            console.log(reportsData);
-            displayTodaySales(reportsData);
-            displayTodayOrders(reportsData);
-            displayWeekSales(reportsData);
-            displayWeekOrders(reportsData);
+    //if .env not exists -> check URL 'hash' property
+    //if no such property -> access denied
+    //else check hash value
+    //if it is matched with environment variable -> go on
+    //if no -> access denied
 
-            drawSalesYearChart(reportsData);
-        })
-        .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(1) + "&page=0&size=100", null, authToken))
-        .then(orders => {
-            ordersData = orders;
-            displayChannelSales(ordersData, "today-online", "Website");
-            displayChannelSales(ordersData, "today-wildberries", "Wildberries");
-            displayChannelSales(ordersData, "today-ozon", "Ozon");
-            displayChannelSales(ordersData, "today-yandex", "Yandex");
-        })
-        .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(7) + "&page=0&size=100", null, authToken))
-        .then(orders => {
-            ordersData = orders;
-            console.log(ordersData);
-            displayChannelSales(ordersData, "online", "Website");
-            displayChannelSales(ordersData, "wildberries", "Wildberries");
-            displayChannelSales(ordersData, "ozon", "Ozon");
-            displayChannelSales(ordersData, "yandex", "Yandex");
+    if (authData.password === undefined) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const hash = urlParams.get('hash');
+        if (hash === process.env.HASH) {
+            authData.login = process.env.API_LOGIN;
+            authData.password = process.env.API_PASSWORD;
+        }
+    }
 
-            calcSalesData(7, ordersData.orders);
-            drawSalesWeekChart(salesData);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+    if (authData.password != undefined) {
+
+        sendRequest('POST', requestURL + authURL, authData)
+            .then(dataAuth => {
+                authToken = getAuthToken(dataAuth);
+            })
+            .then( () => sendRequest('GET', requestURL + dashboardURL, null, authToken))
+            .then(reports => {
+                reportsData = reports;
+                console.log(reportsData);
+                displayTodaySales(reportsData);
+                displayTodayOrders(reportsData);
+                displayWeekSales(reportsData);
+                displayWeekOrders(reportsData);
+
+                drawSalesYearChart(reportsData);
+            })
+            .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(1) + "&page=0&size=100", null, authToken))
+            .then(orders => {
+                ordersData = orders;
+                displayChannelSales(ordersData, "today-online", "Website");
+                displayChannelSales(ordersData, "today-wildberries", "Wildberries");
+                displayChannelSales(ordersData, "today-ozon", "Ozon");
+                displayChannelSales(ordersData, "today-yandex", "Yandex");
+            })
+            .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(7) + "&page=0&size=100", null, authToken))
+            .then(orders => {
+                ordersData = orders;
+                console.log(ordersData);
+                displayChannelSales(ordersData, "online", "Website");
+                displayChannelSales(ordersData, "wildberries", "Wildberries");
+                displayChannelSales(ordersData, "ozon", "Ozon");
+                displayChannelSales(ordersData, "yandex", "Yandex");
+
+                calcSalesData(7, ordersData.orders);
+                drawSalesWeekChart(salesData);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 }
 
 
