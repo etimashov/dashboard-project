@@ -16,8 +16,8 @@ var authToken = null;
 
 //Authorization data
 const authData = {
-    "login": process.env.API_LOGIN,
-    "password": process.env.API_PASSWORD
+    "login": undefined,
+    "password": undefined
 };
 
 //Reports in JSON format
