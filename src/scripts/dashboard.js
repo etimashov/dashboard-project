@@ -120,7 +120,7 @@ const init = function() {
     console.log(`After: ${authData.login}`);
 
     if (authData.password != undefined) {
-        console.log(success);
+        console.log("success");
 
         sendRequest('POST', requestURL + authURL, authData)
             .then(dataAuth => {
