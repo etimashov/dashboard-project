@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yevgen Timashov - Frontend Developer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@200;300;500&family=Montserrat:wght@100;300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><h1>Yevgen Timashov</h1></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#" class="button">Resume</a></li>
+        </ul>
+    </nav>
+    <div class="background-light-grey background-project-img">
+        <section id="main">
+            <h2>Sales Dashboard Project</h2>
+            <p>The most important daily data about the business by API</p>
+        </section>
+    </div>
+    <div class="background-white">
+        <section id="main-content">
+            <article id="content">
+                <h2>Qick Sales Recap</h2>
+                <div class="underscore"></div>
+                <div class="today-sales">
+                    <h4>Totals</h4>
+                    <div class="dashboard-row">
+                        <div class="dash-block" id="sales-today"><div class="loader">Loading...</div><br><span class="small">sales today</span></div>
+                        <div class="dash-block" id="orders-today"><div class="loader">Loading...</div><br><span class="small">orders today</span></div>
+                        <div class="dash-block" id="sales-week"><div class="loader">Loading...</div><br><span class="small">last 7 days sales</span></div>
+                        <div class="dash-block" id="orders-week"><div class="loader">Loading...</div><br><span class="small">last 7 days orders</span></div>
+                    </div>
+                    <h4>Today by channels</h4>
+                    <div class="dashboard-row">
+                        <div class="dash-block" id="today-online"><div class="loader">Loading...</div><br>Website</div>
+                        <div class="dash-block" id="today-wildberries"><div class="loader">Loading...</div><br>Wildberries</div>
+                        <div class="dash-block" id="today-ozon"><div class="loader">Loading...</div><br>Ozon</div>
+                        <div class="dash-block" id="today-yandex"><div class="loader">Loading...</div><br>Yandex</div>
+                    </div>
+                </div>
+            </article>
+            <article id="seven-days-content">
+                <h2>Last 7 Days Sales</h2>
+                <div class="underscore"></div>
+                <h4>By channels</h4>
+                <div class="dashboard-row">
+                    <div class="dash-block" id="online"><div class="loader">Loading...</div><br>Website</div>
+                    <div class="dash-block" id="wildberries"><div class="loader">Loading...</div><br>Wildberries</div>
+                    <div class="dash-block" id="ozon"><div class="loader">Loading...</div><br>Ozon</div>
+                    <div class="dash-block" id="yandex"><div class="loader">Loading...</div><br>Yandex</div>
+                </div>
+                <div class="chart-row">
+                    <canvas id="sales-week-chart" width="400" height="400"></canvas>
+                </div>
+            </article>
+            <article id="seven-days-content">
+                <h2>Current Year Sales</h2>
+                <div class="underscore"></div>
+                <div class="chart-row">
+                    <canvas id="sales-year-chart" width="400" height="400"></canvas>
+                </div>
+            </article>
+        </section>
+    </div>
+    <div class="background-grey">
+        <section id="description">
+            <h2>Project Description</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis quis nostrum voluptatum consectetur quo labore impedit doloremque quam quidem quos?</p>
+        </section>
+    </div>
+    <div class="background-dark-grey">
+        <section id="footer">
+            <h2>Yevgen Timashov</h2>
+            <ul class="social-links">
+                <li><a href="#"><span class="fab fa-linkedin"></span><span class="sr-only" aria-hidden="true">LinkedIn</span></a></li>
+                <li><a href="#"><span class="fab fa-github"></span><span class="sr-only" aria-hidden="true">GitHub</span></a></li>
+                <li><a href="mailto:online@timashov.com"><span class="fas fa-envelope"></span><span class="sr-only" aria-hidden="true">Email</span></a></li>
+            </ul>
+            <p class="copyright">© 2022 Yevgen Timashov. All rights reserved.</p>
+        </section>
+    </div>
+</body>
+</html>
