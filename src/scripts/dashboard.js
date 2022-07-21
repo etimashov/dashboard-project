@@ -97,20 +97,22 @@ function calcSalesData(period, data) {
     console.log(salesData);
 }
 
+function checkAuthorization() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const hash = urlParams.get('hash');
+    if (hash === process.env.HASH) {
+        authData.login = process.env.API_LOGIN;
+        authData.password = process.env.API_PASSWORD;
+        return true;
+    }
+    return false;
+}
+
 //Authorize and get reports in JSON
 const init = function() {
 
-    if (authData.password === undefined) {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const hash = urlParams.get('hash');
-        if (hash === process.env.HASH) {
-            authData.login = process.env.API_LOGIN;
-            authData.password = process.env.API_PASSWORD;
-        }
-    }
-
-    if (authData.password != undefined) {
+    if (checkAuthorization()) {
         sendRequest('POST', requestURL + authURL, authData)
             .then(dataAuth => {
                 authToken = getAuthToken(dataAuth);
@@ -151,6 +153,7 @@ const init = function() {
             });
     } else {
         console.log('Authorization failed!');
+        //TODO: display demo data
     }
 }
 
