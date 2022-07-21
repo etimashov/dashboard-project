@@ -105,6 +105,8 @@ const init = function() {
     //if it is matched with environment variable -> go on
     //if no -> access denied
 
+    console.log(`Before: ${authData.login}`);
+
     if (authData.password === undefined) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -115,7 +117,10 @@ const init = function() {
         }
     }
 
+    console.log(`After: ${authData.login}`);
+
     if (authData.password != undefined) {
+        console.log(success);
 
         sendRequest('POST', requestURL + authURL, authData)
             .then(dataAuth => {
