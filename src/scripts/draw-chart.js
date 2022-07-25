@@ -1,6 +1,5 @@
 import './chart.min.js';
 import { Chart } from './chart.min.js';
-import _ from 'underscore';
 
 function getSalesFigures(value, index, list) {
     return value.salesTotal;
@@ -34,13 +33,13 @@ function drawLineChart(labels, values, title, id) {
 }
 
 export function drawSalesWeekChart(data) {
-    const labels = _.map(data, getDayName);
-    const curWeekSales = _.map(data, getSalesFigures);
+    const labels = data.map(getDayName);
+    const curWeekSales = data.map(getSalesFigures);
     drawLineChart(labels, curWeekSales, 'Last 7 days sales, RUB', 'sales-week-chart');
 }
 
 export function drawSalesYearChart(data) {
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-    const yearSales = _.map(data.report_orders_dynamic_1.annuallyData, getYearSalesFigures);
+    const yearSales = data.report_orders_dynamic_1.annuallyData.map(getYearSalesFigures);
     drawLineChart(labels, yearSales, 'Current year sales, RUB', 'sales-year-chart');
 }
