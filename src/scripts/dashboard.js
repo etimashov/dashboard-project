@@ -15,10 +15,7 @@ const ordersURL = "/api/lite/orders";
 var authToken = null;
 
 //Authorization data
-const authData = {
-    "login": undefined,
-    "password": undefined
-};
+const authData = {};
 
 //Reports in JSON format
 var reportsData = null;
@@ -54,9 +51,14 @@ const sendRequest = function (method, url, data = null, token = null) {
 }
 
 //Get token for API authorization
-const getAuthToken = function (data) {
-    return data.access_token;
-}
+//const getAuthToken = function (data) {
+//    return data.access_token;
+//}
+
+async function getAuthToken() {
+    const res = await sendRequest('POST', requestURL + authURL, authData);
+    return res.access_token;
+} 
 
 //Calculate last week start date and time. 
 function calcDaysAgoDate(daysAgo) {
@@ -94,7 +96,6 @@ function calcSalesData(period, data) {
         salesData[i].salesTotal = curSalesTotal;
         i++;
     }
-    console.log(salesData);
 }
 
 function checkAuthorization() {
@@ -110,41 +111,56 @@ function checkAuthorization() {
 }
 
 //Authorize and get reports in JSON
-const init = function() {
-
+async function init() {
     if (checkAuthorization()) {
-        sendRequest('POST', requestURL + authURL, authData)
-            .then(dataAuth => {
-                authToken = getAuthToken(dataAuth);
-            })
-            .then( () => sendRequest('GET', requestURL + dashboardURL, null, authToken))
+        //Waiting for auth token
+        authToken = await getAuthToken();
+
+        //Requesting API reports
+        sendRequest('GET', requestURL + dashboardURL, null, authToken)
             .then(reports => {
                 reportsData = reports;
-                console.log(reportsData);
+                
+                //Displaying data from API reports
                 displayTodaySales(reportsData);
                 displayTodayOrders(reportsData);
                 displayWeekSales(reportsData);
                 displayWeekOrders(reportsData);
 
+                //Drawing monthly sales chart for current year
                 drawSalesYearChart(reportsData);
             })
-            .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(1) + "&page=0&size=100", null, authToken))
+            .catch(err => {
+                console.log(err);
+            });
+
+        //Requesting today sales data
+        sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(1) + "&page=0&size=100", null, authToken)
             .then(orders => {
                 ordersData = orders;
+
+                //Displaying today sales data by channels
                 displayChannelSales(ordersData, "today-online", "Website");
                 displayChannelSales(ordersData, "today-wildberries", "Wildberries");
                 displayChannelSales(ordersData, "today-ozon", "Ozon");
                 displayChannelSales(ordersData, "today-yandex", "Yandex");
             })
-            .then( () => sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(7) + "&page=0&size=100", null, authToken))
+            .catch(err => {
+                console.log(err);
+            });
+        
+        //Request last 7 days sales data
+        sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(7) + "&page=0&size=100", null, authToken)
             .then(orders => {
                 ordersData = orders;
-                console.log(ordersData);
+
+                //Displaying last 7 days sales data by channels
                 displayChannelSales(ordersData, "online", "Website");
                 displayChannelSales(ordersData, "wildberries", "Wildberries");
                 displayChannelSales(ordersData, "ozon", "Ozon");
                 displayChannelSales(ordersData, "yandex", "Yandex");
 
+                //Calculating and drawing last 7 days total sales data
                 calcSalesData(7, ordersData.orders);
                 drawSalesWeekChart(salesData);
             })
