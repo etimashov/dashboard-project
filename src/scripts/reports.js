@@ -11,7 +11,7 @@ function calcChannelOrders(data, id) {
     let salesAmount = 0;
     let otherSalesAmount = 0;
 
-    for (let item of data.orders) {
+    data.orders.forEach(item => {
         if (item.paymentStatus === "PAID") {
             if (item.delivery.title === channelsID[id]) {
                 itemsNumber++;
@@ -22,7 +22,7 @@ function calcChannelOrders(data, id) {
                 otherSalesAmount += item.totalOrderSum;
             }
         }
-    }
+    });
 
     if (channelsID[id] === undefined) {
         return {orders: otherItemsNumber,
@@ -33,6 +33,7 @@ function calcChannelOrders(data, id) {
     }
 }
 
+//TODO: rewrite for last 7 days. Now displaying current week sales
 function getWeekSalesTotal(data) {
     return data.report_sales_sum_1.week;
 }
@@ -41,23 +42,13 @@ function getTodaySalesTotal(data) {
     return data.report_sales_sum_1.today;
 }
 
+//TODO: rewrite for last 7 days. Now displaying current week sales
 function getWeekOrdersTotal(data) {
     return data.report_orders_sum_1.week;
 }
 
 function getTodayOrdersTotal(data) {
     return data.report_orders_sum_1.today;
-}
-
-function getChannelData(data, channelName) {
-    let salesChannel = 0;
-    for (let item of data.report_sales_channels_1.channelSales)
-    {
-        if (item.channel === channelName) {
-            return item.amount;
-        }
-    }
-    return salesChannel;
 }
 
 export function displayWeekSales(data) {

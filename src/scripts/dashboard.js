@@ -1,6 +1,6 @@
 import '../css/style.css';
 import '../css/dashboard.css';
-import { displayTodayOrders, displayTodaySales, displayWeekOrders, displayWeekSales, getWeekSalesTotal, displayChannelSales } from './reports.js';
+import { displayTodayOrders, displayTodaySales, displayWeekOrders, displayWeekSales, displayChannelSales } from './reports.js';
 import { drawSalesWeekChart, drawSalesYearChart } from './draw-chart';
 
 var salesData = [];
@@ -50,11 +50,6 @@ const sendRequest = function (method, url, data = null, token = null) {
     });
 }
 
-//Get token for API authorization
-//const getAuthToken = function (data) {
-//    return data.access_token;
-//}
-
 async function getAuthToken() {
     const res = await sendRequest('POST', requestURL + authURL, authData);
     return res.access_token;
@@ -84,18 +79,19 @@ function calcSalesData(period, data) {
     }
 
     //Calculating total sales for each day
-    let i = 0;
-    for (let item of salesData) {
+    salesData.forEach((item, index, list) => {
         let curDate = dateToString(item.date).slice(0, -9);
         let curSalesTotal = 0;
-        for (let dataItem of data) {
+
+        data.forEach(dataItem => {
             if (dataItem.date.includes(curDate)) {
                 curSalesTotal += dataItem.totalOrderSum;
             }
-        }
-        salesData[i].salesTotal = curSalesTotal;
-        i++;
-    }
+        });
+
+        list[index].salesTotal = curSalesTotal;
+    });
+    
 }
 
 function checkAuthorization() {
