@@ -35,16 +35,15 @@ function calcChannelOrders(data, id) {
 
 //TODO: rewrite for last 7 days. Now displaying current week sales
 function getWeekSalesTotal(data) {
-    return data.report_sales_sum_1.week;
+    let total =  0;
+    data.forEach(item => {
+        total += item.salesTotal;
+    });
+    return total;
 }
 
 function getTodaySalesTotal(data) {
     return data.report_sales_sum_1.today;
-}
-
-//TODO: rewrite for last 7 days. Now displaying current week sales
-function getWeekOrdersTotal(data) {
-    return data.report_orders_sum_1.week;
 }
 
 function getTodayOrdersTotal(data) {
@@ -58,7 +57,7 @@ export function displayWeekSales(data) {
 
 export function displayWeekOrders(data) {
     const content = document.getElementById('orders-week');
-    content.innerHTML = `<span class="key-data">${getWeekOrdersTotal(data)}</span><br><span class="small">last 7 days orders<span>`;
+    content.innerHTML = `<span class="key-data">${data}</span><br><span class="small">last 7 days orders<span>`;
 }
 
 export function displayTodaySales(data) {

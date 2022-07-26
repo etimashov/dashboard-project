@@ -3,8 +3,6 @@ import '../css/dashboard.css';
 import { displayTodayOrders, displayTodaySales, displayWeekOrders, displayWeekSales, displayChannelSales } from './reports.js';
 import { drawSalesWeekChart, drawSalesYearChart } from './draw-chart';
 
-var salesData = [];
-
 //API URLs
 const requestURL = "https://app.kak2c.ru";
 const authURL = "/api/lite/auth";
@@ -73,6 +71,7 @@ function dateToString(date) {
 //Fills salesData array with information about last 'period' days sales according to data dataset
 function calcSalesData(period, data) {
     //Create array of dates for the 'period' days
+    let salesData = [];
     const todayDate = new Date();
 
     Array.from({length: period}).forEach((item, i) => {
@@ -92,6 +91,8 @@ function calcSalesData(period, data) {
 
         list[index].salesTotal = curSalesTotal;
     });
+
+    return salesData;
 }
 
 function checkAuthorization() {
@@ -120,8 +121,6 @@ async function init() {
                 //Displaying data from API reports
                 displayTodaySales(reportsData);
                 displayTodayOrders(reportsData);
-                displayWeekSales(reportsData);
-                displayWeekOrders(reportsData);
 
                 //Drawing monthly sales chart for current year
                 drawSalesYearChart(reportsData);
@@ -141,9 +140,12 @@ async function init() {
                 displayChannelSales(ordersData.orders, "ozon", "Ozon");
                 displayChannelSales(ordersData.orders, "yandex", "Yandex");
 
-                //Calculating and drawing last 7 days total sales data
-                calcSalesData(7, ordersData.orders);
-                drawSalesWeekChart(salesData);
+                //Calculating and drawing chart of last 7 days total sales data
+                let lastWeekSales = calcSalesData(7, ordersData.orders);
+                drawSalesWeekChart(lastWeekSales);
+
+                displayWeekSales(lastWeekSales);
+                displayWeekOrders(ordersData.recordsTotal);
 
                 const todayDate = new Date();
                 let curDate = dateToString(todayDate).slice(0, -9);
@@ -157,7 +159,6 @@ async function init() {
                 displayChannelSales(todayOrdersData, "today-wildberries", "Wildberries");
                 displayChannelSales(todayOrdersData, "today-ozon", "Ozon");
                 displayChannelSales(todayOrdersData, "today-yandex", "Yandex");
-
             })
             .catch(err => {
                 console.log(err);
