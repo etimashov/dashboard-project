@@ -74,9 +74,10 @@ function dateToString(date) {
 function calcSalesData(period, data) {
     //Create array of dates for the 'period' days
     const todayDate = new Date();
-    for (let i = 1; i <= period; i++) {
+
+    Array.from({length: period}).forEach((item, i) => {
         salesData.push({date: new Date(todayDate.getTime() - ((period - i) * 24 * 60 * 60 * 1000))});
-    }
+    });
 
     //Calculating total sales for each day
     salesData.forEach((item, index, list) => {
