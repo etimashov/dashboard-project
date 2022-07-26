@@ -92,7 +92,7 @@ function calcSalesData(period, data) {
 
         list[index].salesTotal = curSalesTotal;
     });
-    
+    //
 }
 
 function checkAuthorization() {
