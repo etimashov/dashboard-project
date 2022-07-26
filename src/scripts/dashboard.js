@@ -76,7 +76,7 @@ function calcSalesData(period, data) {
     const todayDate = new Date();
 
     Array.from({length: period}).forEach((item, i) => {
-        salesData.push({date: new Date(todayDate.getTime() - ((period - i) * 24 * 60 * 60 * 1000))});
+        salesData.push({date: new Date(todayDate.getTime() - ((period - i - 1) * 24 * 60 * 60 * 1000))});
     });
 
     //Calculating total sales for each day
@@ -129,36 +129,35 @@ async function init() {
             .catch(err => {
                 console.log(err);
             });
-
-        //Requesting today sales data
-        sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(1) + "&page=0&size=100", null, authToken)
-            .then(orders => {
-                ordersData = orders;
-
-                //Displaying today sales data by channels
-                displayChannelSales(ordersData, "today-online", "Website");
-                displayChannelSales(ordersData, "today-wildberries", "Wildberries");
-                displayChannelSales(ordersData, "today-ozon", "Ozon");
-                displayChannelSales(ordersData, "today-yandex", "Yandex");
-            })
-            .catch(err => {
-                console.log(err);
-            });
         
-        //Request last 7 days sales data
+        //Request last 7 days and today sales data
         sendRequest('GET', requestURL + ordersURL + "?date_from=" + calcDaysAgoDate(7) + "&page=0&size=100", null, authToken)
             .then(orders => {
                 ordersData = orders;
 
                 //Displaying last 7 days sales data by channels
-                displayChannelSales(ordersData, "online", "Website");
-                displayChannelSales(ordersData, "wildberries", "Wildberries");
-                displayChannelSales(ordersData, "ozon", "Ozon");
-                displayChannelSales(ordersData, "yandex", "Yandex");
+                displayChannelSales(ordersData.orders, "online", "Website");
+                displayChannelSales(ordersData.orders, "wildberries", "Wildberries");
+                displayChannelSales(ordersData.orders, "ozon", "Ozon");
+                displayChannelSales(ordersData.orders, "yandex", "Yandex");
 
                 //Calculating and drawing last 7 days total sales data
                 calcSalesData(7, ordersData.orders);
                 drawSalesWeekChart(salesData);
+
+                const todayDate = new Date();
+                let curDate = dateToString(todayDate).slice(0, -9);
+                let todayOrdersData = ordersData.orders.filter(item => {
+                    if(item.date.includes(curDate))
+                        return item;
+                });
+
+                //Displaying today sales data by channels
+                displayChannelSales(todayOrdersData, "today-online", "Website");
+                displayChannelSales(todayOrdersData, "today-wildberries", "Wildberries");
+                displayChannelSales(todayOrdersData, "today-ozon", "Ozon");
+                displayChannelSales(todayOrdersData, "today-yandex", "Yandex");
+
             })
             .catch(err => {
                 console.log(err);

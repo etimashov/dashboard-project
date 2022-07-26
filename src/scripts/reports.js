@@ -11,7 +11,7 @@ function calcChannelOrders(data, id) {
     let salesAmount = 0;
     let otherSalesAmount = 0;
 
-    data.orders.forEach(item => {
+    data.forEach(item => {
         if (item.paymentStatus === "PAID") {
             if (item.delivery.title === channelsID[id]) {
                 itemsNumber++;

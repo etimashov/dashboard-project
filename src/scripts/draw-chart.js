@@ -33,6 +33,7 @@ function drawLineChart(labels, values, title, id) {
 }
 
 export function drawSalesWeekChart(data) {
+    console.log(data);
     const labels = data.map(getDayName);
     const curWeekSales = data.map(getSalesFigures);
     drawLineChart(labels, curWeekSales, 'Last 7 days sales, RUB', 'sales-week-chart');
